@@ -96,7 +96,7 @@
 (defn get-frame [thread frame-num]
   (.frame thread frame-num))
 
-(defn- get-source-path [thread frame-num]
+(defn get-source-path [thread frame-num]
   (.sourcePath (.location (get-frame thread frame-num))))
 
 (defn- get-jar-entries [path]
@@ -108,7 +108,7 @@
        first))
 
 (defn- get-file-source [fname path]
-  (let [full-path  (str path File/separator fname)]
+  (let [full-path (str path File/separator fname)]
     (when (.exists (File. full-path))
       {:name full-path})))
 
@@ -146,8 +146,8 @@
        (println (cdt-display-msg (str "Unexpected exception generated: " e#)))
        (throw e#))))
 
-(defn source-not-found [] (cdt-display-msg
-                           "Source not found; check @source-path"))
+(defn source-not-found [] 
+  (cdt-display-msg "Source not found; check @source-path"))
 
 (defn find-classes [class-regex]
   (regex-filter class-regex (.allClasses (vm))))

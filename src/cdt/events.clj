@@ -101,11 +101,15 @@
 (defn set-catch-exclusion-filter-strings [& strings]
   (reset! catch-exclusion-filter-strings strings))
 
+(defn- apply-exclusion-filters
+  [catch]
+  (doseq [s @catch-exclusion-filter-strings]
+    (set-catch-exclusion-filter catch s)))
+
 (defn- create-thread-catch [thread ref-type caught uncaught]
   (let [catch (create-catch-disabled ref-type caught uncaught)]
     (set-thread-filter catch thread)
-    (doseq [s @catch-exclusion-filter-strings]
-      (set-catch-exclusion-filter catch s))
+    (apply-exclusion-filters catch)
     (.setEnabled catch true)
     catch))
 
@@ -305,8 +309,10 @@
 (defn- create-catch
   ([ref-type caught uncaught]
      {:all
-      (doto (create-catch-disabled ref-type caught uncaught)
-        (.setEnabled true))})
+      (let [catch (create-catch-disabled ref-type caught uncaught)]
+        (apply-exclusion-filters catch)
+        (.setEnabled catch true)
+        catch)})
   ([ref-type caught uncaught thread-list groups-to-skip add-new-threads?]
      {:add-new-threads? add-new-threads?
       :groups-to-skip groups-to-skip

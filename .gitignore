@@ -4,3 +4,5 @@ cdt.jar
 lib
 classes
 *~
+/target
+pom.xml
