@@ -97,9 +97,15 @@
    com.sun.tools.jdi.EventRequestManagerImpl$ClassVisibleEventRequestImpl
    'addClassExclusionFilter [java.lang.String] catch s))
 
-(def catch-exclusion-filter-strings (atom nil))
+(def catch-exclusion-filter-strings (atom (list)))
 (defn set-catch-exclusion-filter-strings [& strings]
   (reset! catch-exclusion-filter-strings strings))
+
+(defn add-catch-exclusion-filter-strings [& strings]
+  (swap! catch-exclusion-filter-strings concat strings))
+
+(defn remove-catch-exclusion-filter-strings []
+  (reset! catch-exclusion-filter-strings (list)))
 
 (defn- apply-exclusion-filters
   [catch]
